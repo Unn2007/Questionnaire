@@ -10,7 +10,7 @@ export  const Question = ({ question, updateQuestion, removeQuestion }) => {
           type="text"
           value={question.text}
           onChange={(e) => updateQuestion({ ...question, text: e.target.value })}
-          placeholder="Введіть питання"
+          placeholder="Enter the question"
           className={css.input}
         />
         <select

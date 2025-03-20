@@ -1,5 +1,25 @@
-.questionsList {
+.quizHeader {
+  margin-bottom: 20px;
+}
+.label {
+  display: block;
+  margin-bottom: 10px;
+}
 
-    
+.input,
+.textarea {
+  display: block;
+  width: 100%;
+}
+.inputWrapper {
+  flex-basis: 30%;
+}
 
+.inputWrapper:last-child {
+  flex-grow: 1;
+}
+
+.inputsContainer {
+  display: flex;
+  column-gap: 10px;
 }

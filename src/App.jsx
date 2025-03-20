@@ -2,7 +2,8 @@
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 // import './App.css'
-import {QuestionnaireForm} from './components/QuestionnaireForm/QuestionnaireForm.jsx'
+import {QuestionnaireForm} from './components/QuestionnaireForm/QuestionnaireForm.jsx';
+import {CompleteQuiz} from './components/CompleteQuiz/CompleteQuiz.jsx'
 
 function App() {
  
@@ -10,7 +11,8 @@ function App() {
   return (
     <>
       <div>
-        <QuestionnaireForm/>
+        <CompleteQuiz/>
+        {/* <QuestionnaireForm/> */}
         {/* <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>

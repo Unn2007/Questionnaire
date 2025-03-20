@@ -9,7 +9,7 @@ export const Choice = ({ choice, updateChoice, removeChoice }) => {
         type="text"
         value={choice.text}
         onChange={(e) => updateChoice(choice.id, e.target.value)}
-        placeholder="Введіть варіант відповіді"
+        placeholder="Enter an answer option"
         className={css.input}
       />
       <button onClick={() => removeChoice(choice.id)} className="button">

@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { Question } from "../Question/Question.jsx";
+import { useDispatch } from "react-redux";
+import { addQuiz } from "../../redux/quiz/operations.js";
 import css from "./QuestionnaireForm.module.css";
 
 export const QuestionnaireForm = () => {
+  const dispatch = useDispatch();
+
+  const [quizName, setQuizName] = useState("");
+  const [quizDescription, setQuizDescription] = useState("");
+
   const [questions, setQuestions] = useState([
     {
       id: 0,
@@ -41,14 +48,56 @@ export const QuestionnaireForm = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Отправленные данные:", questions);
-    alert("Данные отправлены! Смотрите в консоли.");
+    const quizData = {
+      name: quizName,
+      description: quizDescription,
+      questions: questions,
+    };
+
+    dispatch(addQuiz(quizData));
+
+    setQuizName("");
+    setQuizDescription("");
+    setQuestions([
+      {
+        id: 0,
+        text: "",
+        type: "text",
+        choices: [
+          { id: 1, text: "" },
+          { id: 2, text: "" },
+        ],
+      },
+    ]);
   };
 
   return (
     <div className={css.QuestionnaireForm}>
       <div className="container">
-        <h2>Create Quiz</h2>
+        <h2 className={css.quizHeader}>Create Quiz</h2>
+        <div className={css.inputsContainer}>
+          <div className={css.inputWrapper}>
+            <label className={css.label}>Quiz Name:</label>
+            <input
+              type="text"
+              value={quizName}
+              onChange={(e) => setQuizName(e.target.value)}
+              placeholder="Enter quiz name"
+              className={css.input}
+            />
+          </div>
+
+          <div className={css.inputWrapper}>
+            <label className={css.label}>Quiz Description:</label>
+            <textarea
+              value={quizDescription}
+              onChange={(e) => setQuizDescription(e.target.value)}
+              placeholder="Enter quiz description"
+              className={css.textarea}
+            />
+          </div>
+        </div>
+
         <ol className={css.questionsList}>
           {questions.map((q) => (
             <Question
