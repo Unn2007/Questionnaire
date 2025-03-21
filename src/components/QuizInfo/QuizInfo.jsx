@@ -1,9 +1,16 @@
+import { useDispatch } from "react-redux";
+import { updateQuizAnswers } from "../../redux/quiz/operations.js";
 import css from './QuizInfo.module.css';
 
 export const QuizInfo = ({ info }) => {
-    const questions = info.questions;
+    const dispatch = useDispatch();
+    const questions = info.quiz.questions;
     const answers = info.answers;
+    const quizId=info.quiz.id;
+    const oldAnswers=info.quiz.answers;
+    
     const handleClick = ()=>{
+        dispatch(updateQuizAnswers({quizId:quizId,newAnswer:answers,oldAnswers:oldAnswers}));
 
     };
 

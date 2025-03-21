@@ -1,13 +1,26 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteQuiz } from "../../redux/quiz/operations.js";
 import kebabIcon from "../../assets/icons8-kebab-menu-24.png";
 import css from "./QuizCard.module.css";
 
 export const QuizCard = ({ quiz }) => {
+  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+ 
+
+  const handleDelete = () => {
+   
+    if (window.confirm("Are you sure you want to delete this test?")) {
+      dispatch(deleteQuiz(quiz.id));
+    }
+    
   };
 
   return (
@@ -17,17 +30,48 @@ export const QuizCard = ({ quiz }) => {
       <p>{`Questions: ${quiz.questions.length}`}</p>
       <p>{`Completions: ${quiz.answers.length}`}</p>
 
-     
       <button type="button" className={css.menuButton} onClick={toggleMenu}>
-        <img className={css.icon} width={25} height={25} src={kebabIcon} alt="menu" />
+        <img
+          className={css.icon}
+          width={25}
+          height={25}
+          src={kebabIcon}
+          alt="menu"
+        />
       </button>
 
-      
       {isMenuOpen && (
         <ul className={css.menu}>
-          <li><button type="button" className={css.actionButton}>Edit</button></li>
-          <li><button type="button" className={css.actionButton}>Run</button></li>
-          <li><button type="button" className={css.actionButton}>Delete</button></li>
+          <li>
+           <Link
+              to="/builder"
+              state={{ quizData: quiz }}
+              className={css.actionButton}
+            >
+              <span>Edit</span>
+              
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/complete"
+              state={{ quizData: quiz }}
+              className={css.actionButton}
+            >
+              <span>Run</span>
+             
+            </Link>
+          </li>
+          <li>
+            <button
+              type="button"
+              className={css.actionButton}
+              onClick={handleDelete}
+            >
+              <span>Delete</span>
+              
+            </button>
+          </li>
         </ul>
       )}
     </div>

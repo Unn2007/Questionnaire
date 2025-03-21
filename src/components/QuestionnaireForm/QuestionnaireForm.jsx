@@ -4,28 +4,24 @@ import { useDispatch } from "react-redux";
 import { addQuiz } from "../../redux/quiz/operations.js";
 import css from "./QuestionnaireForm.module.css";
 
-export const QuestionnaireForm = () => {
+export const QuestionnaireForm = ({ initialData = null }) => {
   const dispatch = useDispatch();
 
-  const [quizName, setQuizName] = useState("");
-  const [quizDescription, setQuizDescription] = useState("");
-
-  
- 
-
-
-
-  const [questions, setQuestions] = useState([
-    {
-      id: 0,
-      text: "",
-      type: "text",
-      choices: [
-        { id: 1, text: "" },
-        { id: 2, text: "" },
-      ],
-    },
-  ]);
+  const [quizName, setQuizName] = useState(initialData?.name || "");
+  const [quizDescription, setQuizDescription] = useState(initialData?.description || "");
+  const [questions, setQuestions] = useState(
+    initialData?.questions || [
+      {
+        id: 0,
+        text: "",
+        type: "text",
+        choices: [
+          { id: 1, text: "" },
+          { id: 2, text: "" },
+        ],
+      },
+    ]
+  );
 
   const addQuestion = () => {
     setQuestions([

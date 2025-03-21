@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { QuizInfo } from "../QuizInfo/QuizInfo.jsx";
 import css from "./CompleteQuiz.module.css";
 
-export const CompleteQuiz = () => {
+export const CompleteQuiz = ({quiz}) => {
     const [index, setIndex] = useState(1);
     const [answers, setAnswers] = useState({});
     const [error, setError] = useState(null);
@@ -19,15 +19,15 @@ export const CompleteQuiz = () => {
     }, []);
     
 
-    const quiz = {
-        "description": "Letters of Alphabet",
-        "name": "Alphabet",
-        "questions": [
-            { "choices": [{ "id": 1, "text": "A" }, { "id": 2, "text": "B" }], "id": 0, "text": "First letter?", "type": "single" },
-            { "choices": [], "id": 1742484773375, "text": "Second Letter?", "type": "text" },
-            { "choices": [{ "id": 1, "text": "X" }, { "id": 2, "text": "Y" }], "id": 1742484776294, "text": "Third Letter?", "type": "multiple" }
-        ]
-    };
+    // const quiz = {
+    //     "description": "Letters of Alphabet",
+    //     "name": "Alphabet",
+    //     "questions": [
+    //         { "choices": [{ "id": 1, "text": "A" }, { "id": 2, "text": "B" }], "id": 0, "text": "First letter?", "type": "single" },
+    //         { "choices": [], "id": 1742484773375, "text": "Second Letter?", "type": "text" },
+    //         { "choices": [{ "id": 1, "text": "X" }, { "id": 2, "text": "Y" }], "id": 1742484776294, "text": "Third Letter?", "type": "multiple" }
+    //     ]
+    // };
 
     const handleNextClick = () => {
         setIndex(index + 1);
@@ -62,14 +62,14 @@ export const CompleteQuiz = () => {
         });
 
         if (unansweredQuestions.length > 0) {
-            setError("Пожалуйста, ответьте на все вопросы перед отправкой.");
+            setError("Please answer all questions before submitting.");
             return;
         }
 
         clearInterval(timerRef.current);
         setIsQuizInfo(true);
 
-        console.log( answers);
+       
         
     };
 
@@ -127,7 +127,7 @@ export const CompleteQuiz = () => {
                 : <button type="button" onClick={handleNextClick}>Далее</button>
             }
 
-            {isQuizInfo && <QuizInfo info={{ questions: quiz.questions, answers: answers, timeSpent: timeSpent }} />}
+            {isQuizInfo && <QuizInfo info={{ quiz: quiz, answers: answers, timeSpent: timeSpent }} />}
         </section>
     );
 };

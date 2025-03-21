@@ -83,6 +83,42 @@ export const addQuiz = createAsyncThunk(
   }
 );
 
+export const updateQuizAnswers = createAsyncThunk(
+  "quiz/updateQuizAnswers",
+  async ({ quizId, newAnswer, oldAnswers }, thunkAPI) => {
+    try {
+      const url = `https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData/${quizId}.json`;
+
+     
+
+      
+      const updatedAnswers = [...(oldAnswers || []), newAnswer];
+
+      
+      const response = await axios.patch(url, { answers: updatedAnswers });
+
+      return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
+  }
+);
+
+export const deleteQuiz = createAsyncThunk(
+  "quiz/deleteQuiz",
+  async (quizId, thunkAPI) => {
+    try {
+      const url = `https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData/${quizId}.json`;
+
+      await axios.delete(url); 
+
+      return quizId; 
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message);
+    }
+  }
+);
+
 // export const addFavorite = createAsyncThunk(
 //   'psychologists/fetchAddFavorite',
 

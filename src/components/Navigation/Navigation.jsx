@@ -16,9 +16,7 @@ export const Navigation = () => {
       <NavLink className={buildLinkClass} to="/builder">
         Create Quiz
       </NavLink>
-      <NavLink className={buildLinkClass} to="/complete">
-      Complete Quiz
-      </NavLink>
+      
     </nav>
   );
 };

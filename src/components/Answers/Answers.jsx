@@ -19,7 +19,7 @@ export const Answers = ({ question, updateChoices }) => {
         <h3>Answers</h3>
         <ol className={css.answerList}>
         {question.choices.map((choice) => (
-          <li className={css.answerItem}><Choice key={choice.id} choice={choice} updateChoice={updateChoice} removeChoice={removeChoice} /></li>
+          <li className={css.answerItem} key={choice.id}><Choice choice={choice} updateChoice={updateChoice} removeChoice={removeChoice} /></li>
         ))}
         </ol>
         <button onClick={addChoice} className="button">Add Answer</button>

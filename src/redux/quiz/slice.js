@@ -3,6 +3,8 @@ import {
   addQuiz,
   fetchNextPage,
   fetchQuizes,
+  updateQuizAnswers,
+  deleteQuiz
   // addAppointmen,
   // addFavorite,
   // getFavorite,
@@ -45,6 +47,22 @@ const quizSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    .addCase(deleteQuiz.pending, handlePending)
+      .addCase(deleteQuiz.fulfilled, (state,action) => {
+        state.items = state.items.filter((quiz) => quiz.id !== action.payload);  
+        state.loading = false;
+        state.error = null;
+       
+      })
+      .addCase(deleteQuiz.rejected, handleRejected)
+    .addCase(updateQuizAnswers.pending, handlePending)
+      .addCase(updateQuizAnswers.fulfilled, (state) => {
+        
+        state.loading = false;
+        state.error = null;
+       
+      })
+      .addCase(updateQuizAnswers.rejected, handleRejected)
     .addCase(fetchNextPage.pending, handlePending)
       .addCase(fetchNextPage.fulfilled, (state, action) => {
         const { quizes, lastKey } = action.payload;
