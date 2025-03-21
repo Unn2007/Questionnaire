@@ -3,9 +3,13 @@ import css from './QuizInfo.module.css';
 export const QuizInfo = ({ info }) => {
     const questions = info.questions;
     const answers = info.answers;
+    const handleClick = ()=>{
+
+    };
 
     return (
         <div>
+            <h3></h3>
             <ul>
                 {questions.map((q) => {
                     if (q.type === "text") {
@@ -43,6 +47,8 @@ export const QuizInfo = ({ info }) => {
                     return null;
                 })}
             </ul>
+            <p>{`Time spent on responses: ${info.timeSpent}`}</p>
+            <button type='button' onClick={handleClick}>Save Answers</button>
         </div>
     );
 };
