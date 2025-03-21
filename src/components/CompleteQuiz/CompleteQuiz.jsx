@@ -1,104 +1,144 @@
 import { useState } from "react";
+import {QuizInfo} from '../QuizInfo/QuizInfo.jsx'
 import css from './CompleteQuiz.module.css';
 
-export const CompleteQuiz = ()=>{
+export const CompleteQuiz = () => {
     const [index, setIndex] = useState(1);
-    const handleNextClick = () => {
-        setIndex(index+1);
-    }
-    const handleBackClick = () => {
-        setIndex(index-1);
-    }
-    const quiz= {
-        "description": "Leters of Alphabet",
+    const [answers, setAnswers] = useState({});
+    const [error, setError] = useState(null); 
+    const [isQuizInfo,setIsQuizInfo] = useState(false)
+
+    const quiz = {
+        "description": "Letters of Alphabet",
         "name": "Alphabet",
         "questions": [
-          {
-            "choices": [
-              {
-                "id": 1,
-                "text": "A"
-              },
-              {
-                "id": 2,
-                "text": "B"
-              }
-            ],
-            "id": 0,
-            "text": "First letter?",
-            "type": "single"
-          },
-          {
-            "choices": [
-              {
-                "id": 1,
-                "text": ""
-              },
-              {
-                "id": 2,
-                "text": ""
-              }
-            ],
-            "id": 1742484773375,
-            "text": "Second Letter?",
-            "type": "text"
-          },
-          {
-            "choices": [
-              {
-                "id": 1,
-                "text": "X"
-              },
-              {
-                "id": 2,
-                "text": "Y"
-              }
-            ],
-            "id": 1742484776294,
-            "text": "Third Letter?",
-            "type": "multiple"
-          }
+            {
+                "choices": [
+                    { "id": 1, "text": "A" },
+                    { "id": 2, "text": "B" }
+                ],
+                "id": 0,
+                "text": "First letter?",
+                "type": "single"
+            },
+            {
+                "choices": [],
+                "id": 1742484773375,
+                "text": "Second Letter?",
+                "type": "text"
+            },
+            {
+                "choices": [
+                    { "id": 1, "text": "X" },
+                    { "id": 2, "text": "Y" }
+                ],
+                "id": 1742484776294,
+                "text": "Third Letter?",
+                "type": "multiple"
+            }
         ]
-      }
+    };
+
+    const handleNextClick = () => {
+        setIndex(index + 1);
+        setError(null); 
+    };
+
+    const handleBackClick = () => {
+        setIndex(index - 1);
+        setError(null);
+    };
+
+    const handleAnswerChange = (questionId, value) => {
+        setAnswers(prev => ({ ...prev, [questionId]: value }));
+    };
+
+    const handleCheckboxChange = (questionId, choiceId) => {
+        setAnswers(prev => {
+            const prevAnswers = prev[questionId] || [];
+            return {
+                ...prev,
+                [questionId]: prevAnswers.includes(choiceId)
+                    ? prevAnswers.filter(id => id !== choiceId)
+                    : [...prevAnswers, choiceId]
+            };
+        });
+    };
+
+    const handleSubmit = () => {
+        
+        const unansweredQuestions = quiz.questions.filter(q => {
+            const answer = answers[q.id];
+            return !answer || (Array.isArray(answer) && answer.length === 0);
+        });
+
+        if (unansweredQuestions.length > 0) {
+            setError("Пожалуйста, ответьте на все вопросы перед отправкой.");
+            return;
+        }
+        setIsQuizInfo(true);
+
+        console.log("Ответы пользователя:", answers);
+        alert("Ответы успешно отправлены!");
+    };
+
+    const currentQuestion = quiz.questions[index - 1];
+
     return (
-    
-    <section>
-        <h2>{quiz.name}</h2>
-        <p>{quiz.description}</p>
-        <p>{`Question №${index} of ${quiz.questions.length}`}</p>
-        <p>{quiz.questions[index-1].text}</p>
-        {(quiz.questions[index-1].type==="single")&&(quiz.questions[index-1].choices.map((choise)=>{
-            return (<div key={choise.id}>
-                <label>{choise.text}</label>
+        <section>
+            <h2>{quiz.name}</h2>
+            <p>{quiz.description}</p>
+            <p>{`Question №${index} of ${quiz.questions.length}`}</p>
+            <p>{currentQuestion.text}</p>
+
+            
+            {currentQuestion.type === "single" && currentQuestion.choices.map((choice) => (
+                <div key={choice.id}>
+                    <label>{choice.text}</label>
+                    <input
+                        type="radio"
+                        name={`question-${currentQuestion.id}`}
+                        value={choice.id}
+                        checked={answers[currentQuestion.id] === choice.id}
+                        onChange={() => handleAnswerChange(currentQuestion.id, choice.id)}
+                        className={css.input}
+                    />
+                </div>
+            ))}
+
+           
+            {currentQuestion.type === "multiple" && currentQuestion.choices.map((choice) => (
+                <div key={choice.id}>
+                    <label>{choice.text}</label>
+                    <input
+                        type="checkbox"
+                        value={choice.id}
+                        checked={answers[currentQuestion.id]?.includes(choice.id) || false}
+                        onChange={() => handleCheckboxChange(currentQuestion.id, choice.id)}
+                        className={css.input}
+                    />
+                </div>
+            ))}
+
+            
+            {currentQuestion.type === "text" && (
                 <input
-          type="radio"
-          
-          className={css.input}
-        />
-            </div>)
-        }))}
-        {(quiz.questions[index-1].type==="multiple")&&(quiz.questions[index-1].choices.map((choise)=>{
-            return (<div key={choise.id}>
-                <label>{choise.text}</label>
-                <input
-          type="checkbox"
-          
-          className={css.input}
-        />
-            </div>)
-        }))}
+                    type="text"
+                    placeholder="Enter answer"
+                    value={answers[currentQuestion.id] || ""}
+                    onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                    className={css.input}
+                />
+            )}
 
+            {error && <p className="text-red-500">{error}</p>}
 
-        {(quiz.questions[index-1].type==="text")&&(<input
-          type="text"
-          placeholder="Enter answer"
-          className={css.input}
-        />)}
-         <button type='button' onClick={handleBackClick} disabled={index===1}>Back</button>
-        <button type='button' onClick={handleNextClick} disabled={index===(quiz.questions.length)}>Next</button>
-       
-    </section>
-    
-    )
-}
-
+            <button type="button" onClick={handleBackClick} disabled={index === 1}>Back</button>
+            {index === quiz.questions.length
+                ? <button type="button" onClick={handleSubmit}>Submit</button>
+                : <button type="button" onClick={handleNextClick}>Next</button>
+            }
+            {isQuizInfo&&<QuizInfo info={{questions:quiz.questions,answers:answers}}/>}
+        </section>
+    );
+};
