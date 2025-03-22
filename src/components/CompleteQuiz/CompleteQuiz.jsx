@@ -2,132 +2,158 @@ import { useState, useEffect, useRef } from "react";
 import { QuizInfo } from "../QuizInfo/QuizInfo.jsx";
 import css from "./CompleteQuiz.module.css";
 
-export const CompleteQuiz = ({quiz}) => {
-    const [index, setIndex] = useState(1);
-    const [answers, setAnswers] = useState({});
-    const [error, setError] = useState(null);
-    const [isQuizInfo, setIsQuizInfo] = useState(false);
-    const [timeSpent, setTimeSpent] = useState(0);
-    const timerRef = useRef(null);
+export const CompleteQuiz = ({ quiz }) => {
+  const [index, setIndex] = useState(1);
+  const [answers, setAnswers] = useState({});
+  const [error, setError] = useState(null);
+  const [isQuizInfo, setIsQuizInfo] = useState(false);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [isDisabled, setDisabled] = useState(false);
+  const timerRef = useRef(null);
 
-    useEffect(() => {
-        timerRef.current = setInterval(() => {
-            setTimeSpent(prev => prev + 1);
-        }, 1000);
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setTimeSpent((prev) => prev + 1);
+    }, 1000);
 
-        return () => clearInterval(timerRef.current); 
-    }, []);
-    
+    return () => clearInterval(timerRef.current);
+  }, []);
 
-    // const quiz = {
-    //     "description": "Letters of Alphabet",
-    //     "name": "Alphabet",
-    //     "questions": [
-    //         { "choices": [{ "id": 1, "text": "A" }, { "id": 2, "text": "B" }], "id": 0, "text": "First letter?", "type": "single" },
-    //         { "choices": [], "id": 1742484773375, "text": "Second Letter?", "type": "text" },
-    //         { "choices": [{ "id": 1, "text": "X" }, { "id": 2, "text": "Y" }], "id": 1742484776294, "text": "Third Letter?", "type": "multiple" }
-    //     ]
-    // };
+  const handleNextClick = () => {
+    setIndex(index + 1);
+    setError(null);
+  };
 
-    const handleNextClick = () => {
-        setIndex(index + 1);
-        setError(null);
-    };
+  const handleBackClick = () => {
+    setIndex(index - 1);
+    setError(null);
+    setIsQuizInfo(false);
+  };
 
-    const handleBackClick = () => {
-        setIndex(index - 1);
-        setError(null);
-    };
+  const handleAnswerChange = (questionId, value) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+  };
 
-    const handleAnswerChange = (questionId, value) => {
-        setAnswers(prev => ({ ...prev, [questionId]: value }));
-    };
+  const handleCheckboxChange = (questionId, choiceId) => {
+    setAnswers((prev) => {
+      const prevAnswers = prev[questionId] || [];
+      return {
+        ...prev,
+        [questionId]: prevAnswers.includes(choiceId)
+          ? prevAnswers.filter((id) => id !== choiceId)
+          : [...prevAnswers, choiceId],
+      };
+    });
+  };
 
-    const handleCheckboxChange = (questionId, choiceId) => {
-        setAnswers(prev => {
-            const prevAnswers = prev[questionId] || [];
-            return {
-                ...prev,
-                [questionId]: prevAnswers.includes(choiceId) 
-                    ? prevAnswers.filter(id => id !== choiceId) 
-                    : [...prevAnswers, choiceId]
-            };
-        });
-    };
+  const handleSubmit = () => {
+    const unansweredQuestions = quiz.questions.filter((q) => {
+      const answer = answers[q.id];
+      return !answer || (Array.isArray(answer) && answer.length === 0);
+    });
 
-    const handleSubmit = () => {
-        const unansweredQuestions = quiz.questions.filter(q => {
-            const answer = answers[q.id];
-            return !answer || (Array.isArray(answer) && answer.length === 0);
-        });
+    if (unansweredQuestions.length > 0) {
+      setError("Please answer all questions before submitting.");
+      return;
+    }
 
-        if (unansweredQuestions.length > 0) {
-            setError("Please answer all questions before submitting.");
-            return;
-        }
+    clearInterval(timerRef.current);
+    setIsQuizInfo(true);
+    setError(null);
+    setIndex(1);
+    setDisabled(true);
+  };
 
-        clearInterval(timerRef.current);
-        setIsQuizInfo(true);
+  const currentQuestion = quiz.questions[index - 1];
 
-       
-        
-    };
+  return (
+    <section>
+      <h2 className={css.name}>{quiz.name}</h2>
+      <p className={css.description}>{quiz.description}</p>
+      <div className={css.questionContainer}>
+        <p
+          className={css.quizCounter}
+        >{`Question № ${index} of ${quiz.questions.length}`}</p>
+        <p className={css.question}>{currentQuestion.text}</p>
 
-    const currentQuestion = quiz.questions[index - 1];
+        {currentQuestion.type === "single" &&
+         <ul className={css.answersList}>
+          {currentQuestion.choices.map((choice) => (
+            <li key={choice.id} className={css.answerContainer}>
+              <label className={css.label}>{choice.text}</label>
+              <input
+                type="radio"
+                name={`question-${currentQuestion.id}`}
+                value={choice.id}
+                checked={answers[currentQuestion.id] === choice.id}
+                onChange={() =>
+                  handleAnswerChange(currentQuestion.id, choice.id)
+                }
+                className={css.input}
+              />
+            </li>
+          ))}
+          </ul>}
 
-    return (
-        <section>
-            <h2>{quiz.name}</h2>
-            <p>{quiz.description}</p>
-            <p>{`Question №${index} of ${quiz.questions.length}`}</p>
-            <p>{currentQuestion.text}</p>
-          
-            {currentQuestion.type === "single" && currentQuestion.choices.map((choice) => (
-                <div key={choice.id}>
-                    <label>{choice.text}</label>
-                    <input
-                        type="radio"
-                        name={`question-${currentQuestion.id}`}
-                        value={choice.id}
-                        checked={answers[currentQuestion.id] === choice.id}
-                        onChange={() => handleAnswerChange(currentQuestion.id, choice.id)}
-                        className={css.input}
-                    />
-                </div>
-            ))}
+        {currentQuestion.type === "multiple" &&
+        <ul className={css.answersList}>
+          {currentQuestion.choices.map((choice) => (
+            <li key={choice.id} className={css.answerContainer}>
+              
+              <input
+                type="checkbox"
+                value={choice.id}
+                checked={
+                  answers[currentQuestion.id]?.includes(choice.id) || false
+                }
+                onChange={() =>
+                  handleCheckboxChange(currentQuestion.id, choice.id)
+                }
+                className={css.input}
+                id={choice.id}
+              />
+              <label htmlFor={choice.id}>{choice.text}</label>
+            </li>
+          ))}
+          </ul>
+          }
 
-            {currentQuestion.type === "multiple" && currentQuestion.choices.map((choice) => (
-                <div key={choice.id}>
-                    <label>{choice.text}</label>
-                    <input
-                        type="checkbox"
-                        value={choice.id}
-                        checked={answers[currentQuestion.id]?.includes(choice.id) || false}
-                        onChange={() => handleCheckboxChange(currentQuestion.id, choice.id)}
-                        className={css.input}
-                    />
-                </div>
-            ))}
-
-            {currentQuestion.type === "text" && (
-                <input
-                    type="text"
-                    placeholder="Enter the answer"
-                    value={answers[currentQuestion.id] || ""}
-                    onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                    className={css.input}
-                />
-            )}
-
-            {error && <p className="text-red-500">{error}</p>}
-
-            <button type="button" onClick={handleBackClick} disabled={index === 1}>Назад</button>
-            {index === quiz.questions.length
-                ? <button type="button" onClick={handleSubmit}>Отправить</button>
-                : <button type="button" onClick={handleNextClick}>Далее</button>
+        {currentQuestion.type === "text" && (
+          <input
+            type="text"
+            placeholder="Enter the answer"
+            value={answers[currentQuestion.id] || ""}
+            onChange={(e) =>
+              handleAnswerChange(currentQuestion.id, e.target.value)
             }
+            className={css.input}
+          />
+        )}
 
-            {isQuizInfo && <QuizInfo info={{ quiz: quiz, answers: answers, timeSpent: timeSpent }} />}
-        </section>
-    );
+        {error && <p className={css.error}>{error}</p>}
+
+        <div className={css.buttonContainer}>
+
+        <button type="button" onClick={handleBackClick} disabled={index === 1}>
+          Prev
+        </button>
+        {index === quiz.questions.length ? (
+          <button type="button" onClick={handleSubmit}>
+            Submit
+          </button>
+        ) : (
+          <button type="button" onClick={handleNextClick} disabled={isDisabled}>
+            Next
+          </button>
+        )}
+        </div>
+      </div>
+
+      {isQuizInfo && (
+        <QuizInfo
+          info={{ quiz: quiz, answers: answers, timeSpent: timeSpent }}
+        />
+      )}
+    </section>
+  );
 };

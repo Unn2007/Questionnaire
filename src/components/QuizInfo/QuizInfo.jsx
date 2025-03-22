@@ -15,35 +15,35 @@ export const QuizInfo = ({ info }) => {
     };
 
     return (
-        <div>
-            <h3></h3>
-            <ul>
+        <div className={css.infoContainer}>
+            <h3 className={css.infoHeader}>Your answers</h3>
+            <ul className={css.list}>
                 {questions.map((q) => {
                     if (q.type === "text") {
                         return (
-                            <li key={q.id}>
-                                <p>{q.text}</p>
-                                <p>{answers[q.id] || "No answer provided"}</p>
+                            <li key={q.id} className={css.listItem}>
+                                <p className={css.questionText}> <span className={css.span}>Question: </span> {q.text}</p>
+                                <p> <span className={css.span}>Answer: </span> {answers[q.id] || "No answer provided"}</p>
                             </li>
                         );
                     }
                     if (q.type === "single") {
                         const selectedChoice = q.choices.find((choice) => choice.id === answers[q.id]);
                         return (
-                            <li key={q.id}>
-                                <p>{q.text}</p>
-                                <p>{selectedChoice ? selectedChoice.text : "No answer selected"}</p>
+                            <li key={q.id} className={css.listItem}>
+                                <p><span className={css.span}>Question: </span>{q.text}</p>
+                                <p><span className={css.span}>Answer: </span>{selectedChoice ? selectedChoice.text : "No answer selected"}</p>
                             </li>
                         );
                     }
                     if (q.type === "multiple") {
                         return (
-                            <li key={q.id}>
-                                <p>{q.text}</p>
+                            <li key={q.id} className={css.listItem}>
+                                <p> <span className={css.span}>Question: </span>{q.text}</p>
                                 {Array.isArray(answers[q.id]) && answers[q.id].length > 0 ? (
                                     answers[q.id].map((id) => {
                                         const choice = q.choices.find((choice) => choice.id === id);
-                                        return <p key={id}>{choice ? choice.text : "Invalid choice"}</p>;
+                                        return <p key={id}><span className={css.span}>Answer: </span>{choice ? choice.text : "Invalid choice"}</p>;
                                     })
                                 ) : (
                                     <p>No answers selected</p>
@@ -54,7 +54,7 @@ export const QuizInfo = ({ info }) => {
                     return null;
                 })}
             </ul>
-            <p>{`Time spent on responses: ${info.timeSpent}`}</p>
+            <p className={css.time}>{`Time spent on responses: ${info.timeSpent} seconds.`}</p>
             <button type='button' onClick={handleClick}>Save Answers</button>
         </div>
     );

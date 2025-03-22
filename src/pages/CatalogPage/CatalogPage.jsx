@@ -23,7 +23,7 @@ export default function CatalogPage() {
     const isLoading = useSelector(selectIsLoading);
     const total = useSelector(selectTotal);
     const page = useSelector(selectPage);
-    const isLastPage = page > total / 3;
+    const isLastPage = page > total / 9;
     const loadMore = async () => {
       if (!lastKey || isLastPage) return;
   
