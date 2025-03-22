@@ -28,7 +28,7 @@ export const QuizCard = ({ quiz }) => {
       <h3 className={css.header}>{quiz.name}</h3>
       <p className={css.description}>{quiz.description}</p>
       <p>{`Questions: ${quiz.questions.length}`}</p>
-      <p>{`Completions: ${quiz.answers.length}`}</p>
+      <p>{`Completions: ${quiz.answers ? quiz.answers.length : 0}`}</p>
 
       <button type="button" className={css.menuButton} onClick={toggleMenu}>
         <img

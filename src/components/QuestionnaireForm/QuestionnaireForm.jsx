@@ -76,6 +76,8 @@ export const QuestionnaireForm = ({ initialData = null }) => {
       name: quizName,
       description: quizDescription,
       questions: questions,
+      answers:[]
+     
     };
 
     dispatch(addQuiz(quizData));
