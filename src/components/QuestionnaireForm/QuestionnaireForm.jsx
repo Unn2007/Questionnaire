@@ -8,7 +8,9 @@ export const QuestionnaireForm = ({ initialData = null }) => {
   const dispatch = useDispatch();
 
   const [quizName, setQuizName] = useState(initialData?.name || "");
-  const [quizDescription, setQuizDescription] = useState(initialData?.description || "");
+  const [quizDescription, setQuizDescription] = useState(
+    initialData?.description || ""
+  );
   const [questions, setQuestions] = useState(
     initialData?.questions || [
       {
@@ -22,7 +24,7 @@ export const QuestionnaireForm = ({ initialData = null }) => {
       },
     ]
   );
-  const [error, setError] = useState(""); 
+  const [error, setError] = useState("");
 
   const addQuestion = () => {
     setQuestions([
@@ -40,7 +42,9 @@ export const QuestionnaireForm = ({ initialData = null }) => {
   };
 
   const updateQuestion = (updatedQuestion) => {
-    setQuestions(questions.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q)));
+    setQuestions(
+      questions.map((q) => (q.id === updatedQuestion.id ? updatedQuestion : q))
+    );
   };
 
   const removeQuestion = (id) => {
@@ -48,7 +52,7 @@ export const QuestionnaireForm = ({ initialData = null }) => {
   };
 
   const handleSubmit = () => {
-    setError(""); 
+    setError("");
 
     if (!quizName.trim()) {
       setError("Quiz name is required.");
@@ -65,9 +69,13 @@ export const QuestionnaireForm = ({ initialData = null }) => {
         return;
       }
 
-      if ((question.type === "single" || question.type === "multiple") &&
-          question.choices.every(choice => !choice.text.trim())) {
-        setError("At least one choice must have text for single/multiple choice questions.");
+      if (
+        (question.type === "single" || question.type === "multiple") &&
+        question.choices.every((choice) => !choice.text.trim())
+      ) {
+        setError(
+          "At least one choice must have text for single/multiple choice questions."
+        );
         return;
       }
     }
@@ -76,8 +84,7 @@ export const QuestionnaireForm = ({ initialData = null }) => {
       name: quizName,
       description: quizDescription,
       questions: questions,
-      answers:[]
-     
+      answers: [],
     };
 
     dispatch(addQuiz(quizData));
@@ -102,9 +109,6 @@ export const QuestionnaireForm = ({ initialData = null }) => {
     <div className={css.QuestionnaireForm}>
       <div className="container">
         <h2 className={css.quizHeader}>Create Quiz</h2>
-
-       
-      
 
         <div className={css.inputsContainer}>
           <div className={css.inputWrapper}>
@@ -131,7 +135,12 @@ export const QuestionnaireForm = ({ initialData = null }) => {
 
         <ol className={css.questionsList}>
           {questions.map((q) => (
-            <Question key={q.id} question={q} updateQuestion={updateQuestion} removeQuestion={removeQuestion} />
+            <Question
+              key={q.id}
+              question={q}
+              updateQuestion={updateQuestion}
+              removeQuestion={removeQuestion}
+            />
           ))}
         </ol>
 

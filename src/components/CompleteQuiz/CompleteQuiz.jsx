@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsQuizInfo } from "../../redux/quiz/slice.js";
+import { selectIsQuizInfo } from "../../redux/quiz/selectors.js";
 import { QuizInfo } from "../QuizInfo/QuizInfo.jsx";
 import css from "./CompleteQuiz.module.css";
 
@@ -6,10 +9,11 @@ export const CompleteQuiz = ({ quiz }) => {
   const [index, setIndex] = useState(1);
   const [answers, setAnswers] = useState({});
   const [error, setError] = useState(null);
-  const [isQuizInfo, setIsQuizInfo] = useState(false);
   const [timeSpent, setTimeSpent] = useState(0);
   const [isDisabled, setDisabled] = useState(false);
   const timerRef = useRef(null);
+  const isQuizInfo = useSelector(selectIsQuizInfo);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
@@ -27,7 +31,7 @@ export const CompleteQuiz = ({ quiz }) => {
   const handleBackClick = () => {
     setIndex(index - 1);
     setError(null);
-    setIsQuizInfo(false);
+    dispatch(setIsQuizInfo(false));
   };
 
   const handleAnswerChange = (questionId, value) => {
@@ -58,7 +62,7 @@ export const CompleteQuiz = ({ quiz }) => {
     }
 
     clearInterval(timerRef.current);
-    setIsQuizInfo(true);
+    dispatch(setIsQuizInfo(true));
     setError(null);
     setIndex(1);
     setDisabled(true);
@@ -76,47 +80,47 @@ export const CompleteQuiz = ({ quiz }) => {
         >{`Question № ${index} of ${quiz.questions.length}`}</p>
         <p className={css.question}>{currentQuestion.text}</p>
 
-        {currentQuestion.type === "single" &&
-         <ul className={css.answersList}>
-          {currentQuestion.choices.map((choice) => (
-            <li key={choice.id} className={css.answerContainer}>
-              <label className={css.label}>{choice.text}</label>
-              <input
-                type="radio"
-                name={`question-${currentQuestion.id}`}
-                value={choice.id}
-                checked={answers[currentQuestion.id] === choice.id}
-                onChange={() =>
-                  handleAnswerChange(currentQuestion.id, choice.id)
-                }
-                className={css.input}
-              />
-            </li>
-          ))}
-          </ul>}
-
-        {currentQuestion.type === "multiple" &&
-        <ul className={css.answersList}>
-          {currentQuestion.choices.map((choice) => (
-            <li key={choice.id} className={css.answerContainer}>
-              
-              <input
-                type="checkbox"
-                value={choice.id}
-                checked={
-                  answers[currentQuestion.id]?.includes(choice.id) || false
-                }
-                onChange={() =>
-                  handleCheckboxChange(currentQuestion.id, choice.id)
-                }
-                className={css.input}
-                id={choice.id}
-              />
-              <label htmlFor={choice.id}>{choice.text}</label>
-            </li>
-          ))}
+        {currentQuestion.type === "single" && (
+          <ul className={css.answersList}>
+            {currentQuestion.choices.map((choice) => (
+              <li key={choice.id} className={css.answerContainer}>
+                <label className={css.label}>{choice.text}</label>
+                <input
+                  type="radio"
+                  name={`question-${currentQuestion.id}`}
+                  value={choice.id}
+                  checked={answers[currentQuestion.id] === choice.id}
+                  onChange={() =>
+                    handleAnswerChange(currentQuestion.id, choice.id)
+                  }
+                  className={css.input}
+                />
+              </li>
+            ))}
           </ul>
-          }
+        )}
+
+        {currentQuestion.type === "multiple" && (
+          <ul className={css.answersList}>
+            {currentQuestion.choices.map((choice) => (
+              <li key={choice.id} className={css.answerContainer}>
+                <input
+                  type="checkbox"
+                  value={choice.id}
+                  checked={
+                    answers[currentQuestion.id]?.includes(choice.id) || false
+                  }
+                  onChange={() =>
+                    handleCheckboxChange(currentQuestion.id, choice.id)
+                  }
+                  className={css.input}
+                  id={choice.id}
+                />
+                <label htmlFor={choice.id}>{choice.text}</label>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {currentQuestion.type === "text" && (
           <input
@@ -133,19 +137,26 @@ export const CompleteQuiz = ({ quiz }) => {
         {error && <p className={css.error}>{error}</p>}
 
         <div className={css.buttonContainer}>
-
-        <button type="button" onClick={handleBackClick} disabled={index === 1}>
-          Prev
-        </button>
-        {index === quiz.questions.length ? (
-          <button type="button" onClick={handleSubmit}>
-            Submit
+          <button
+            type="button"
+            onClick={handleBackClick}
+            disabled={index === 1}
+          >
+            Prev
           </button>
-        ) : (
-          <button type="button" onClick={handleNextClick} disabled={isDisabled}>
-            Next
-          </button>
-        )}
+          {index === quiz.questions.length ? (
+            <button type="button" onClick={handleSubmit}>
+              Submit
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleNextClick}
+              disabled={isDisabled}
+            >
+              Next
+            </button>
+          )}
         </div>
       </div>
 

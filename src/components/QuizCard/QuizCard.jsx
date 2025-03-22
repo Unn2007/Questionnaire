@@ -13,14 +13,10 @@ export const QuizCard = ({ quiz }) => {
     setIsMenuOpen((prev) => !prev);
   };
 
- 
-
   const handleDelete = () => {
-   
-    if (window.confirm("Are you sure you want to delete this test?")) {
+    if (window.confirm("Are you sure you want to delete this quiz?")) {
       dispatch(deleteQuiz(quiz.id));
     }
-    
   };
 
   return (
@@ -43,13 +39,12 @@ export const QuizCard = ({ quiz }) => {
       {isMenuOpen && (
         <ul className={css.menu}>
           <li>
-           <Link
+            <Link
               to="/builder"
               state={{ quizData: quiz }}
               className={css.actionButton}
             >
               <span>Edit</span>
-              
             </Link>
           </li>
           <li>
@@ -59,7 +54,6 @@ export const QuizCard = ({ quiz }) => {
               className={css.actionButton}
             >
               <span>Run</span>
-             
             </Link>
           </li>
           <li>
@@ -69,7 +63,6 @@ export const QuizCard = ({ quiz }) => {
               onClick={handleDelete}
             >
               <span>Delete</span>
-              
             </button>
           </li>
         </ul>

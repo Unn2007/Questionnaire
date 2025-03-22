@@ -1,13 +1,13 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const fetchQuizes = createAsyncThunk(
-  'quiz/fetchAll',
+  "quiz/fetchAll",
 
   async (_, thunkAPI) => {
     try {
       const url =
-        'https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData.json';
+        "https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData.json";
       const params = {
         orderBy: '"$key"',
         limitToFirst: 9,
@@ -21,9 +21,7 @@ export const fetchQuizes = createAsyncThunk(
         id,
         ...obj,
       }));
-      const lastKey = quizes.length
-        ? quizes[quizes.length - 1].id
-        : null;
+      const lastKey = quizes.length ? quizes[quizes.length - 1].id : null;
 
       const responseTotal = await axios.get(`${url}?shallow=true`);
       const total = responseTotal.data
@@ -37,12 +35,12 @@ export const fetchQuizes = createAsyncThunk(
   }
 );
 export const fetchNextPage = createAsyncThunk(
-  'quiz/fetchNextPage',
+  "quiz/fetchNextPage",
 
   async (oldLastKey, thunkAPI) => {
     try {
       const url =
-        'https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData.json';
+        "https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData.json";
 
       const params = {
         orderBy: '"$key"',
@@ -67,12 +65,12 @@ export const fetchNextPage = createAsyncThunk(
 );
 
 export const addQuiz = createAsyncThunk(
-  'quiz/addQuizData',
+  "quiz/addQuizData",
 
   async (quizData, thunkAPI) => {
     try {
       const url =
-        'https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData.json';
+        "https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData.json";
 
       const response = await axios.post(url, { ...quizData });
 
@@ -89,12 +87,8 @@ export const updateQuizAnswers = createAsyncThunk(
     try {
       const url = `https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData/${quizId}.json`;
 
-     
-
-      
       const updatedAnswers = [...(oldAnswers || []), newAnswer];
 
-      
       const response = await axios.patch(url, { answers: updatedAnswers });
 
       return response.data;
@@ -110,100 +104,12 @@ export const deleteQuiz = createAsyncThunk(
     try {
       const url = `https://questionnaire-b22ca-default-rtdb.europe-west1.firebasedatabase.app/questionnaire/v1/quizData/${quizId}.json`;
 
-      await axios.delete(url); 
+      await axios.delete(url);
 
-      return quizId; 
+      return quizId;
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
     }
   }
 );
 
-// export const addFavorite = createAsyncThunk(
-//   'psychologists/fetchAddFavorite',
-
-//   async (authData, thunkAPI) => {
-//     try {
-//       const url = `https://psychologistsservices-e119b-default-rtdb.europe-west1.firebasedatabase.app/users/${authData.localId}.json`;
-
-//       const params = {
-//         auth: authData.token,
-//       };
-
-//       const data = { favorites: authData.favorites };
-
-//       const response = await axios.patch(url, data, { params });
-
-//       return;
-//     } catch (e) {
-//       return thunkAPI.rejectWithValue(e.message);
-//     }
-//   }
-// );
-
-// export const getFavorite = createAsyncThunk(
-//   'psychologists/fetchGetFavorite',
-
-//   async (authData, thunkAPI) => {
-//     try {
-//       const url = `https://psychologistsservices-e119b-default-rtdb.europe-west1.firebasedatabase.app/users/${authData.localId}.json`;
-
-//       const params = {
-//         auth: authData.token,
-//       };
-
-//       const response = await axios.get(url, { params });
-
-//       return response.data;
-//     } catch (e) {
-//       return thunkAPI.rejectWithValue(e.message);
-//     }
-//   }
-// );
-
-// export const fetchFavoritePsychologists = createAsyncThunk(
-//   'psychologists/fetchFavoritePsychologists',
-
-//   async (data, thunkAPI) => {
-//     const { favoriteIds, psychologistsState } = data;
-
-//     const psychologistsMap = Object.fromEntries(
-//       psychologistsState.map((psy) => [psy.id, psy])
-//     );
-
-//     const existingPsychologists = favoriteIds
-//       .map((id) => psychologistsMap[id])
-//       .filter(Boolean);
-
-//     const missingIds = favoriteIds.filter((id) => !psychologistsMap[id]);
-
-//     if (missingIds.length === 0) return existingPsychologists;
-
-//     try {
-//       const requests = missingIds.map((id) =>
-//         axios
-//           .get(
-//             `https://psychologistsservices-e119b-default-rtdb.europe-west1.firebasedatabase.app/psychologists/${id}.json`
-//           )
-//           .catch((error) => {
-//             console.error(`Error fetching psychologist with id ${id}:`, error);
-//             return null;
-//           })
-//       );
-
-//       const responses = await Promise.all(requests);
-
-//       const fetchedPsychologists = responses
-//         .map((response, index) =>
-//           response && response.data
-//             ? { id: missingIds[index], ...response.data }
-//             : null
-//         )
-//         .filter(Boolean);
-
-//       return [...existingPsychologists, ...fetchedPsychologists];
-//     } catch (error) {
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   }
-// );

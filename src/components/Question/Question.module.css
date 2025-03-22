@@ -1,21 +1,21 @@
 .question {
-   padding: 15px;
-   border: 1px solid black; 
+  padding: 15px;
+  border: 1px solid black;
 }
 
 .questionHeader {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .question:not(:last-child) {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .questionWrapper {
-    display: flex;
-    column-gap: 10px;
+  display: flex;
+  column-gap: 10px;
 }
 
 .input {
-    flex-grow: 1;
+  flex-grow: 1;
 }

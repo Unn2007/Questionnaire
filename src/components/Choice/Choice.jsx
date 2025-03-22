@@ -1,4 +1,4 @@
-import css from './Choice.module.css'
+import css from "./Choice.module.css";
 
 export const Choice = ({ choice, updateChoice, removeChoice }) => {
   return (

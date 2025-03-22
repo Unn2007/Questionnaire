@@ -1,10 +1,10 @@
 .answers {
-padding-top: 10px;
+  padding-top: 10px;
 }
 .answerList {
-    padding: 10px 5px;
+  padding: 10px 5px;
 }
 
 .answerItem:not(:last-child) {
-margin-bottom: 10px;
+  margin-bottom: 10px;
 }
