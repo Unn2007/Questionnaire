@@ -1,16 +1,30 @@
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { updateQuizAnswers } from "../../redux/quiz/operations.js";
+import { Loader } from '../../components/Loader/Loader.jsx';
+import {
+    selectIsLoading,
+    
+  } from '../../redux/quiz/selectors.js';
 import css from './QuizInfo.module.css';
 
 export const QuizInfo = ({ info }) => {
     const dispatch = useDispatch();
+    const isLoading = useSelector(selectIsLoading);
     const questions = info.quiz.questions;
     const answers = info.answers;
     const quizId=info.quiz.id;
     const oldAnswers=info.quiz.answers;
     
-    const handleClick = ()=>{
-        dispatch(updateQuizAnswers({quizId:quizId,newAnswer:answers,oldAnswers:oldAnswers}));
+    const handleClick = async ()=>{
+        await dispatch(updateQuizAnswers({ quizId, newAnswer: answers, oldAnswers }))
+        .unwrap()
+        .then(() => {
+            window.location.reload(); 
+        })
+        .catch((error) => {
+            console.error(error);
+          
+        });
 
     };
 
@@ -55,6 +69,7 @@ export const QuizInfo = ({ info }) => {
                 })}
             </ul>
             <p className={css.time}>{`Time spent on responses: ${info.timeSpent} seconds.`}</p>
+            {isLoading && <Loader />}
             <button type='button' onClick={handleClick}>Save Answers</button>
         </div>
     );
