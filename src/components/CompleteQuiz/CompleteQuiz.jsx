@@ -162,7 +162,7 @@ export const CompleteQuiz = ({ quiz }) => {
 
       {isQuizInfo && (
         <QuizInfo
-          info={{ quiz: quiz, answers: answers, timeSpent: timeSpent }}
+          info={{ quiz: quiz, answers: answers, timeSpent: timeSpent, setDisabled:setDisabled, setAnswers:setAnswers }}
         />
       )}
     </section>

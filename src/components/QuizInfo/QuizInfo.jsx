@@ -13,6 +13,8 @@ export const QuizInfo = ({ info }) => {
   const answers = info.answers;
   const quizId = info.quiz.id;
   const oldAnswers = info.quiz.answers;
+  const setDisabled = info.setDisabled;
+  const setAnswers= info.setAnswers;
 
   const handleClick = async () => {
     await dispatch(
@@ -21,6 +23,8 @@ export const QuizInfo = ({ info }) => {
       .unwrap()
       .then(() => {
         dispatch(setIsQuizInfo(false));
+        setDisabled(false);
+        setAnswers({});
         toast.success("Answers succesfully saved", { duration: 4000 });
       })
       .catch((error) => {
