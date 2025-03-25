@@ -45,7 +45,11 @@ const quizSlice = createSlice({
       })
       .addCase(deleteQuiz.rejected, handleRejected)
       .addCase(updateQuizAnswers.pending, handlePending)
-      .addCase(updateQuizAnswers.fulfilled, (state) => {
+      .addCase(updateQuizAnswers.fulfilled, (state, action) => {
+        const index = state.items.findIndex(
+          (quiz) => quiz.id === action.payload.quizId
+        );
+        state.items[index].answers = [...action.payload.quiz.answers];
         state.loading = false;
         state.error = null;
       })

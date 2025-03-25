@@ -23,6 +23,7 @@ export const QuizInfo = ({ info }) => {
       .unwrap()
       .then(() => {
         dispatch(setIsQuizInfo(false));
+        
         setDisabled(false);
         setAnswers({});
         toast.success("Answers succesfully saved", { duration: 4000 });

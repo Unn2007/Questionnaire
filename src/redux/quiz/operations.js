@@ -90,8 +90,11 @@ export const updateQuizAnswers = createAsyncThunk(
       const updatedAnswers = [...(oldAnswers || []), newAnswer];
 
       const response = await axios.patch(url, { answers: updatedAnswers });
+      const responseQuiz = await axios.get(url);
 
-      return response.data;
+     
+
+      return {quizId,quiz:responseQuiz.data};
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message);
     }
