@@ -12,8 +12,16 @@ export const CompleteQuiz = ({ quiz }) => {
   const [timeSpent, setTimeSpent] = useState(0);
   const [isDisabled, setDisabled] = useState(false);
   const timerRef = useRef(null);
+  const inputRef = useRef(null);
   const isQuizInfo = useSelector(selectIsQuizInfo);
   const dispatch = useDispatch();
+  const currentQuestion = quiz.questions[index - 1];
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [currentQuestion]);
 
   useEffect(() => {
     timerRef.current = setInterval(() => {
@@ -68,7 +76,7 @@ export const CompleteQuiz = ({ quiz }) => {
     setDisabled(true);
   };
 
-  const currentQuestion = quiz.questions[index - 1];
+  
 
   return (
     <section>
@@ -84,10 +92,11 @@ export const CompleteQuiz = ({ quiz }) => {
           <ul className={css.answersList}>
             {currentQuestion.choices.map((choice) => (
               <li key={choice.id} className={css.answerContainer}>
-                <label className={css.label}>{choice.text}</label>
+                <label className={css.label} htmlFor={choice.id}>{choice.text}  </label>
                 <input
                   type="radio"
                   name={`question-${currentQuestion.id}`}
+                  id={choice.id}
                   value={choice.id}
                   checked={answers[currentQuestion.id] === choice.id}
                   onChange={() =>
@@ -124,6 +133,7 @@ export const CompleteQuiz = ({ quiz }) => {
 
         {currentQuestion.type === "text" && (
           <input
+          ref={inputRef}
             type="text"
             placeholder="Enter the answer"
             value={answers[currentQuestion.id] || ""}
