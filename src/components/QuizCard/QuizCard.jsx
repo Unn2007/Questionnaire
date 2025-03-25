@@ -22,7 +22,7 @@ export const QuizCard = ({ quiz }) => {
       await dispatch(deleteQuiz(quiz.id))
         .unwrap()
         .then(() => {
-          toast.success("Answers succesfully deleted", { duration: 4000 });
+          toast.success("Quiz succesfully deleted", { duration: 4000 });
         })
         .catch((error) => {
           toast.error(`${error}`, { duration: 4000 });

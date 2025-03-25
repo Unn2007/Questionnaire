@@ -1,11 +1,15 @@
+import { useDispatch, useSelector } from "react-redux";
+import { Loader } from "../../components/Loader/Loader.jsx";
+import toast from "react-hot-toast";
+import { selectIsLoading } from "../../redux/quiz/selectors.js";
 import { useState } from "react";
 import { Question } from "../Question/Question.jsx";
-import { useDispatch } from "react-redux";
 import { addQuiz } from "../../redux/quiz/operations.js";
 import css from "./QuestionnaireForm.module.css";
 
 export const QuestionnaireForm = ({ initialData = null }) => {
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
 
   const [quizName, setQuizName] = useState(initialData?.name || "");
   const [quizDescription, setQuizDescription] = useState(
@@ -51,7 +55,7 @@ export const QuestionnaireForm = ({ initialData = null }) => {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setError("");
 
     if (!quizName.trim()) {
@@ -87,7 +91,14 @@ export const QuestionnaireForm = ({ initialData = null }) => {
       answers: [],
     };
 
-    dispatch(addQuiz(quizData));
+    await dispatch(addQuiz(quizData))
+      .unwrap()
+      .then(() => {
+        toast.success("Quiz succesfully saved", { duration: 4000 });
+      })
+      .catch((error) => {
+        toast.error(`${error}`, { duration: 4000 });
+      });
 
     setQuizName("");
     setQuizDescription("");
@@ -107,6 +118,7 @@ export const QuestionnaireForm = ({ initialData = null }) => {
 
   return (
     <div className={css.QuestionnaireForm}>
+      {isLoading && <Loader />}
       <div className="container">
         <h2 className={css.quizHeader}>Create Quiz</h2>
 
