@@ -41,11 +41,11 @@ export const QuizInfo = ({ info }) => {
             return (
               <li key={q.id} className={css.listItem}>
                 <p className={css.questionText}>
-                  {" "}
+                 
                   <span className={css.span}>Question: </span> {q.text}
                 </p>
                 <p>
-                  {" "}
+                
                   <span className={css.span}>Answer: </span>{" "}
                   {answers[q.id] || "No answer provided"}
                 </p>
@@ -73,8 +73,7 @@ export const QuizInfo = ({ info }) => {
             return (
               <li key={q.id} className={css.listItem}>
                 <p>
-                  {" "}
-                  <span className={css.span}>Question: </span>
+                 <span className={css.span}>Question: </span>
                   {q.text}
                 </p>
                 {Array.isArray(answers[q.id]) && answers[q.id].length > 0 ? (
