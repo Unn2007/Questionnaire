@@ -4,6 +4,7 @@ import { updateQuizAnswers } from "../../redux/quiz/operations.js";
 import { Loader } from "../../components/Loader/Loader.jsx";
 import toast from "react-hot-toast";
 import { selectIsLoading } from "../../redux/quiz/selectors.js";
+import {clearAnswers} from '../../redux/completeQuiz/slice.js'
 import css from "./QuizInfo.module.css";
 
 export const QuizInfo = ({ info }) => {
@@ -14,7 +15,7 @@ export const QuizInfo = ({ info }) => {
   const quizId = info.quiz.id;
   const oldAnswers = info.quiz.answers;
   const setDisabled = info.setDisabled;
-  const setAnswers= info.setAnswers;
+ 
 
   const handleClick = async () => {
     await dispatch(
@@ -25,7 +26,7 @@ export const QuizInfo = ({ info }) => {
         dispatch(setIsQuizInfo(false));
         
         setDisabled(false);
-        setAnswers({});
+        dispatch(clearAnswers());
         toast.success("Answers succesfully saved", { duration: 4000 });
       })
       .catch((error) => {

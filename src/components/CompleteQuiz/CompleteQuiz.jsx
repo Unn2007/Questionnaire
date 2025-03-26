@@ -1,13 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {selectAnswers} from '../../redux/completeQuiz/selectors.js'
 import { setIsQuizInfo } from "../../redux/quiz/slice.js";
 import { selectIsQuizInfo } from "../../redux/quiz/selectors.js";
+import {updateAnswers,updateAnswersCheckbox} from '../../redux/completeQuiz/slice.js'
 import { QuizInfo } from "../QuizInfo/QuizInfo.jsx";
 import css from "./CompleteQuiz.module.css";
 
 export const CompleteQuiz = ({ quiz }) => {
   const [index, setIndex] = useState(1);
-  const [answers, setAnswers] = useState({});
+  // const [answers, setAnswers] = useState({});
   const [error, setError] = useState(null);
   const [timeSpent, setTimeSpent] = useState(0);
   const [isDisabled, setDisabled] = useState(false);
@@ -16,6 +18,7 @@ export const CompleteQuiz = ({ quiz }) => {
   const isQuizInfo = useSelector(selectIsQuizInfo);
   const dispatch = useDispatch();
   const currentQuestion = quiz.questions[index - 1];
+  const answers = useSelector(selectAnswers);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -43,19 +46,22 @@ export const CompleteQuiz = ({ quiz }) => {
   };
 
   const handleAnswerChange = (questionId, value) => {
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+    dispatch(updateAnswers({questionId, value}))
+
+    // setAnswers((prev) => ({ ...prev, [questionId]: value }));
   };
 
   const handleCheckboxChange = (questionId, choiceId) => {
-    setAnswers((prev) => {
-      const prevAnswers = prev[questionId] || [];
-      return {
-        ...prev,
-        [questionId]: prevAnswers.includes(choiceId)
-          ? prevAnswers.filter((id) => id !== choiceId)
-          : [...prevAnswers, choiceId],
-      };
-    });
+    dispatch(updateAnswersCheckbox({questionId, choiceId}));
+    // setAnswers((prev) => {
+    //   const prevAnswers = prev[questionId] || [];
+    //   return {
+    //     ...prev,
+    //     [questionId]: prevAnswers.includes(choiceId)
+    //       ? prevAnswers.filter((id) => id !== choiceId)
+    //       : [...prevAnswers, choiceId],
+    //   };
+    // });
   };
 
   const handleSubmit = () => {
@@ -172,7 +178,7 @@ export const CompleteQuiz = ({ quiz }) => {
 
       {isQuizInfo && (
         <QuizInfo
-          info={{ quiz: quiz, answers: answers, timeSpent: timeSpent, setDisabled:setDisabled, setAnswers:setAnswers }}
+          info={{ quiz: quiz, answers: answers, timeSpent: timeSpent, setDisabled:setDisabled }}
         />
       )}
     </section>
