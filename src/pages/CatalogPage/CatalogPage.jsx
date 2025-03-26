@@ -10,6 +10,7 @@ import {
 } from "../../redux/quiz/selectors.js";
 import { nextPage } from "../../redux/quiz/slice.js";
 import { Loader } from "../../components/Loader/Loader.jsx";
+import { FiltersForm } from '../../components/FiltersForm/FiltersForm.jsx';
 import { QuizCardList } from "../../components/QuizCardList/QuizCardList.jsx";
 import css from "./CatalogPage.module.css";
 
@@ -37,6 +38,7 @@ export default function CatalogPage() {
       <div className={`container ${css.container}`}>
         <DocumentTitle>Catalog</DocumentTitle>
         {isLoading && <Loader />}
+        <FiltersForm/>
         <QuizCardList />
         {!isLastPage && (
           <button type="button" onClick={loadMore} className={css.button}>
