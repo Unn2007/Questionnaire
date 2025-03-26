@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Icon } from '../Icon/Icon.jsx';
 import { setSelectedOption } from '../../redux/filters/slice.js';
 import css from './FiltersForm.module.css';
 
@@ -40,7 +41,12 @@ export const FiltersForm = () => {
       <label className={css.label}>Filters</label>
       <div className={css.customSelect} onClick={() => setIsOpen(!isOpen)}>
         {selectedOption}
-        <span>{isOpen ? '{' : '}'}</span>
+        <Icon
+          width={15}
+          height={10}
+          href={`${isOpen ? 'icon-up' : 'icon-down'}`}
+          className={css.arrow}
+        />
         
       </div>
       {isOpen && (

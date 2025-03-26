@@ -3,6 +3,7 @@ import { selectQuizes } from "../../redux/quiz/selectors.js";
 import { selectFilter } from '../../redux/filters/selectors.js';
 import { QuizCard } from "../../components/QuizCard/QuizCard.jsx";
 import { sortByName, sortArray } from '../../utils/sort.js';
+
 import css from "./QuizCardList.module.css";
 export const QuizCardList = () => {
   const quizes = useSelector(selectQuizes);
@@ -20,13 +21,13 @@ export const QuizCardList = () => {
       case 'Name Z to A':
         return sortByName([...list], 'desc');
       case 'amount of questions by growth':
-        return sortArray(list, 'price_per_hour', 'desc');
+        return sortArray(list, 'questions', 'desc');
       case 'amount of questions by decline':
-        return sortArray(list, 'price_per_hour', 'asc');
+        return sortArray(list, 'questions', 'asc');
       case 'amount of completions by growth':
-        return sortArray(list, 'rating', 'desc');
+        return sortArray(list, 'answers', 'desc');
       case 'amount of completions by decline':
-        return sortArray(list, 'rating', 'asc');
+        return sortArray(list, 'answers', 'asc');
 
       default:
         return list;

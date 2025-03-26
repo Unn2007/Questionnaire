@@ -1,63 +1,59 @@
 .form {
   position: relative;
-  font-size: clamp(calc(0.22 * 14px), 1.4rem, 14px);
-  font-weight: var(--font-weight-medium);
+  font-size:  14px;
+  font-weight: 500;
   line-height: 1.29;
-  color: var(--gray);
-  margin-bottom: clamp(calc(0.22 * 32px), 3.2rem, 32px);
+  color: black;
+  margin-bottom: 32px;
 }
 
 .label {
   display: block;
-  margin-bottom: clamp(calc(0.22 * 8px), 0.8rem, 8px);
+  margin-bottom:  8px;
 }
 .customSelect {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: clamp(calc(0.22 * 226px), 22.6rem, 226px);
-  padding: clamp(calc(0.22 * 14px), 1.4rem, 14px)
-    clamp(calc(0.22 * 18px), 1.8rem, 18px);
-
+  max-width:  226px;
+  padding: 14px 18px;
   border: none;
-  border-radius: clamp(calc(0.22 * 14px), 1.4rem, 14px);
-  background-color: var(--akcent);
-  font-size: clamp(calc(0.22 * 16px), 1.6rem, 16px);
-  font-weight: var(--font-weight-medium);
+  border-radius:  14px;
+  background-color: gray;
+  font-size:  16px;
+  font-weight: 500;
   line-height: 1.25;
-  color: var(--white);
+  color: black;
 }
 
 .optionsList {
   position: absolute;
-  max-width: clamp(calc(0.22 * 226px), 22.6rem, 226px);
+  max-width:  226px;
   display: flex;
   flex-direction: column;
   row-gap: 8px;
   align-items: start;
-  padding: clamp(calc(0.22 * 14px), 1.4rem, 14px)
-    clamp(calc(0.22 * 18px), 1.8rem, 18px);
-  padding-right: clamp(calc(0.22 * 80px), 8rem, 80px);
-  background-color: var(--psychologists);
+  padding:  14px 18px;
+    
+ 
+  background-color: gray;
   z-index: 100;
 }
 .option {
-  font-size: clamp(calc(0.22 * 16px), 1.6rem, 16px);
-  font-weight: var(--font-weight-regular);
+  font-size:  16px;
+  font-weight: 400;
   line-height: 1.25;
-
-  color: var(--light-text);
-  background-color: var(--white);
   border: none;
 }
 
 .active {
-  color: var(--main);
+  color: white;
 }
 
 .option:hover,
 .option:focus {
-  color: var(--main);
+  color: white;
+  background-color: black;
 }
 .arrow {
   width: clamp(calc(0.22 * 15px), 1.5rem, 15px);

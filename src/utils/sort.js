@@ -11,29 +11,10 @@ export const sortByName = (arr, order = 'asc') => {
 
 export const sortArray = (arr, field, order = 'asc') => {
   return arr.slice().sort((a, b) => {
-    const valueA = a[field];
-    const valueB = b[field];
+    const lengthA = Array.isArray(a[field]) ? a[field].length : 0;
+    const lengthB = Array.isArray(b[field]) ? b[field].length : 0;
 
-    if (typeof valueA === 'number' && typeof valueB === 'number') {
-      return order === 'asc' ? valueA - valueB : valueB - valueA;
-    }
-
-    if (typeof valueA === 'string' && typeof valueB === 'string') {
-      return order === 'asc'
-        ? valueA.localeCompare(valueB)
-        : valueB.localeCompare(valueA);
-    }
-
-    return 0;
+    return order === 'asc' ? lengthA - lengthB : lengthB - lengthA;
   });
 };
 
-export const filterAndSortByPrice = (arr, isGreaterThan10 = true) => {
-  const filteredArray = arr.filter((item) =>
-    isGreaterThan10 ? item.price_per_hour > 10 : item.price_per_hour < 10
-  );
-
-  const sortOrder = isGreaterThan10 ? 'desc' : 'asc';
-
-  return sortArray(filteredArray, 'price_per_hour', sortOrder);
-};
