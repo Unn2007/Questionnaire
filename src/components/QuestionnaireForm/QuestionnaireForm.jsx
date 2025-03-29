@@ -5,6 +5,9 @@ import { selectIsLoading } from "../../redux/quiz/selectors.js";
 import { useState } from "react";
 import { Question } from "../Question/Question.jsx";
 import { addQuiz } from "../../redux/quiz/operations.js";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import css from "./QuestionnaireForm.module.css";
 
 export const QuestionnaireForm = ({ initialData = null }) => {
@@ -53,6 +56,15 @@ export const QuestionnaireForm = ({ initialData = null }) => {
 
   const removeQuestion = (id) => {
     setQuestions(questions.filter((q) => q.id !== id));
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      const oldIndex = questions.findIndex((q) => q.id === active.id);
+      const newIndex = questions.findIndex((q) => q.id === over.id);
+      setQuestions(arrayMove(questions, oldIndex, newIndex));
+    }
   };
 
   const handleSubmit = async () => {
@@ -145,16 +157,20 @@ export const QuestionnaireForm = ({ initialData = null }) => {
           </div>
         </div>
 
-        <ol className={css.questionsList}>
-          {questions.map((q) => (
-            <Question
-              key={q.id}
-              question={q}
-              updateQuestion={updateQuestion}
-              removeQuestion={removeQuestion}
-            />
-          ))}
-        </ol>
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={questions} strategy={verticalListSortingStrategy}>
+            <ol className={css.questionsList}>
+              {questions.map((q) => (
+                <Question
+                  key={q.id}
+                  question={q}
+                  updateQuestion={updateQuestion}
+                  removeQuestion={removeQuestion}
+                />
+              ))}
+            </ol>
+          </SortableContext>
+        </DndContext>
 
         {error && <p className={css.error}>{error}</p>}
 

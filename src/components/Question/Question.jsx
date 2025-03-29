@@ -1,8 +1,35 @@
+import { useSortable } from "@dnd-kit/sortable";
 import { Answers } from "../Answers/Answers.jsx";
+import { CSS } from "@dnd-kit/utilities";
 import css from "./Question.module.css";
+
+const SortableQuestion = ({ id, classNm, children }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id }); 
+  
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <li className={classNm} ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </li>
+  );
+};
+
+
 export const Question = ({ question, updateQuestion, removeQuestion }) => {
   return (
-    <li className={css.question}>
+    <SortableQuestion id={question.id} classNm={css.question}> 
+         
       <h3 className={css.questionHeader}>Question</h3>
       <div className={css.questionWrapper}>
         <input
@@ -36,6 +63,8 @@ export const Question = ({ question, updateQuestion, removeQuestion }) => {
           updateChoices={(choices) => updateQuestion({ ...question, choices })}
         />
       )}
-    </li>
+   
+    </SortableQuestion>
+
   );
 };
